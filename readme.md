@@ -210,3 +210,99 @@ Example of running a container with no network:
 1.  Macvlan: Macvlan networks allow containers to have their own MAC addresses and appear as physical devices on the network. This is useful for legacy applications that expect to be directly connected to the physical network.
 
 > By leveraging Docker networks, you can enable communication between containers, control network isolation, and architect multi-container applications effectively. Networks provide flexibility and scalability in managing container communication and connectivity.
+
+Pushing to Docker Hub
+---------------------
+
+Docker Hub is a public registry where you can store and share Docker images. It allows you to distribute your images to others and also provides a centralized repository for your own images.
+
+![notion image](https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fdd624914-6876-4b58-9694-424f7aa5e22a%2F340ae9e0-645e-4986-a452-4305d44d01e6%2FUntitled.png?table=block&id=92da5f79-a057-4ce7-bc42-f1b3c43e3ec7&cache=v2)
+
+Here's how you can push your Docker images to Docker Hub:
+
+1.  Sign up for a Docker Hub account:
+
+-   Go to the Docker Hub website (<https://hub.docker.com/>) and create an account if you don't have one already.
+
+1.  Create a new repository:
+
+-   Once logged in, click on the "Repositories" tab and then click on "Create Repository."
+
+-   Provide a name for your repository and set the visibility (public or private).
+
+-   Click "Create" to create the repository.
+
+1.  Log in to the Docker CLI:
+
+-   Open your terminal and log in to Docker Hub using the `docker login` command.
+
+-   Enter your Docker Hub username and password when prompted.
+
+-   If you have enabled two-factor authentication, you might need to create an access token. Follow the instructions in the Docker documentation (<https://docs.docker.com/security/for-developers/access-tokens/>) to create an access token.
+
+1.  Push your image to the repository:
+
+-   Before pushing, make sure your image is tagged with the correct repository name and tag.
+
+-   Use the `docker tag` command to tag your image:
+
+`docker tag your_image_name your_username/your_reponame:tagname`
+
+-   Push the tagged image to Docker Hub:
+
+`docker push your_username/your_reponame:tagname`
+
+#### [](https://app.100xdevs.com/courses/2/234/257#b4aaa9ea670248d3b59818c2e11dea73 "Creating a New Repository and Pushing to It")Creating a New Repository and Pushing to It
+
+Let's say you have a custom Docker image that you want to push to a new repository on Docker Hub. Here's how you can do it:
+
+1.  Build your Docker image:
+
+-   Use the `docker build` command to build your image and give it a meaningful name:
+
+`docker build -t your_username/your_reponame:tagname .`
+
+-   Replace `your_username` with your Docker Hub username, `your_reponame` with the desired repository name, and `tagname` with a tag for your image (e.g., `v1`, `latest`).
+
+1.  Push the image to Docker Hub:
+
+-   After building the image, push it to Docker Hub using the `docker push` command:
+
+`docker push your_username/your_reponame:tagname`
+
+1.  Running the image from Docker Hub:
+
+-   Once the image is pushed to Docker Hub, you can run it on any machine that has Docker installed:
+
+`docker run -p 3000:3000 your_username/your_reponame:tagname`
+
+-   This command will pull the image from Docker Hub (if not already present locally) and start a container based on that image.
+
+#### [](https://app.100xdevs.com/courses/2/234/257#fa49069bc5b64406b6680a0325d09d3d "Image Tags and Versioning")Image Tags and Versioning
+
+When pushing images to Docker Hub, you can use tags to version your images. Tags allow you to have multiple versions of an image within the same repository. This is similar to using tags or branches in version control systems like Git.
+
+For example, you can tag your images with version numbers or specific tags like `v1`, `v2`, `latest`, `dev`, etc. This helps in managing different versions of your image and allows users to pull specific versions based on their requirements.
+
+To push an image with a specific tag, you can use the `docker tag` command before pushing:
+
+`docker tag your_image_name your_username/your_reponame:v1
+docker push your_username/your_reponame:v1`
+
+#### [](https://app.100xdevs.com/courses/2/234/257#b6d803dad52945f0be1b1a123d52a269 "Sharing and Collaboration")Sharing and Collaboration
+
+Docker Hub makes it easy to share and collaborate on Docker images. By pushing your images to Docker Hub, you can:
+
+-   Share your images with others, allowing them to use your pre-built images in their projects.
+
+-   Collaborate with team members by granting them access to your private repositories.
+
+-   Automate builds and deployments by integrating Docker Hub with CI/CD pipelines.
+
+For example, if you have pushed an image to Docker Hub, others can easily run it on their machines using a simple `docker run` command:
+
+`docker run -p 3000:3000 your_username/your_reponame:tagname`
+
+This command will pull the image from Docker Hub (if not already present locally) and start a container based on that image, making it convenient for others to use your pre-built images without the need for local setup or configuration.
+
+> By leveraging Docker Hub, you can streamline the distribution and sharing of your Docker images, making it easier for others to use and collaborate on your projects.
