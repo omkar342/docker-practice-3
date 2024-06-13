@@ -1,6 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose';
+require('dotenv').config();
 
-const mongoUrl: string = 'mongodb://mongo_docker_practice:27017/myDatabase';
+const mongoUrl: string =  process.env.MONGO_URL || 'mongodb://mongo_docker_practice:27017/myDatabase';
 
 // Connect to MongoDB
 mongoose.connect(mongoUrl)

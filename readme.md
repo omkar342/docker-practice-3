@@ -306,3 +306,107 @@ For example, if you have pushed an image to Docker Hub, others can easily run it
 This command will pull the image from Docker Hub (if not already present locally) and start a container based on that image, making it convenient for others to use your pre-built images without the need for local setup or configuration.
 
 > By leveraging Docker Hub, you can streamline the distribution and sharing of your Docker images, making it easier for others to use and collaborate on your projects.
+
+Docker Compose
+--------------
+
+Docker Compose is a powerful tool that allows you to define and run multi-container Docker applications using a single YAML file. It simplifies the process of configuring and managing multiple containers, networks, and volumes, making it easier to develop, test, and deploy complex applications.
+
+Before Docker Compose, you would need to manually create networks, volumes, and start containers individually, specifying all the necessary options and configurations. This process could be tedious and error-prone, especially when dealing with multiple containers and their dependencies.
+
+![notion image](https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fdd624914-6876-4b58-9694-424f7aa5e22a%2F370637e7-3b5f-4abc-b537-cc6e0f854491%2FUntitled.png?table=block&id=1f4407c9-624e-48aa-be12-722580317635&cache=v2)
+
+#### [](https://app.100xdevs.com/courses/2/234/257#bef36da4efb8449dbbc096157de9c226 "Problem Solved by Docker Compose")Problem Solved by Docker Compose
+
+Docker Compose solves the problem of managing multiple containers and their dependencies by providing a declarative way to define and run multi-container applications. Instead of manually running multiple `docker` commands to create networks, volumes, and start containers, you can define your entire application stack in a single `docker-compose.yaml` file.
+
+The `docker-compose.yaml` file allows you to specify the services (containers), networks, volumes, and their configurations in a structured and readable format. This makes it easier to understand the application architecture, share the setup with others, and version control the configuration.
+
+#### [](https://app.100xdevs.com/courses/2/234/257#f74be6e804844def8956bb4570bd8cc8 "Before Docker Compose")Before Docker Compose
+
+Before Docker Compose, you would need to perform the following steps to set up a multi-container application:
+
+1.  Create a network:
+
+`docker network create my_custom_network`
+
+1.  Create a volume:
+
+`docker volume create volume_database`
+
+1.  Start the MongoDB container:
+
+`docker run -d -v volume_database:/data/db --name mongo --network my_custom_network mongo`
+
+1.  Start the backend container:
+
+`docker run -d -p 3000:3000 --name backend --network my_custom_network backend`
+
+As you can see, this process involves running multiple `docker` commands, specifying the options for each container, and manually connecting them to the appropriate network and volumes.
+
+#### [](https://app.100xdevs.com/courses/2/234/257#92fce28b98f5410bb8d872a7ae3532c8 "After Docker Compose")After Docker Compose
+
+With Docker Compose, you can simplify the above process by defining your application stack in a `docker-compose.yaml` file. Here's an example:
+
+```
+version: "1.0"
+services:
+  mongodb: 
+    image: mongo:latest
+    container_name: mongodb_3
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_3:/data/db
+    
+  backend:
+    build: .
+    container_name: backend_3
+    depends_on:
+      - mongodb
+    ports: 
+      - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://mongodb_3:27017/test_3
+
+volumes:
+  mongodb_data_3:
+```
+
+In this `docker-compose.yaml` file:
+
+-   We define two services: `mongodb` and `backend`.
+
+-   The `mongodb` service uses the `mongo` image, maps port 27017, and mounts a named volume `mongodb_data` to persist data.
+
+-   The `backend` service uses the `backend` image, depends on the `mongodb` service, maps port 3000, and sets an environment variable `MONGO_URL` to connect to the MongoDB container.
+
+-   We define a named volume `mongodb_data` to persist MongoDB data.
+
+To start the application stack defined in the `docker-compose.yaml` file, you simply run:
+
+`docker-compose up`
+
+This command reads the `docker-compose.yaml` file, creates the necessary networks and volumes, and starts the containers defined in the services section.
+
+To stop the application stack and remove the containers, networks, and volumes, you can run:
+
+`docker-compose down --volumes`
+
+The `--volumes` flag ensures that the volumes are also removed along with the containers and networks.
+
+#### [](https://app.100xdevs.com/courses/2/234/257#0924b94b8169461e9d16fc30b9e21f7e "Benefits of Docker Compose")Benefits of Docker Compose
+
+Using Docker Compose offers several benefits:
+
+1.  Simplified application definition: Docker Compose allows you to define your entire application stack in a single YAML file, making it easier to understand and manage the configuration.
+
+1.  Easy sharing and collaboration: The `docker-compose.yaml` file can be version-controlled and shared with others, enabling easy collaboration and reproducibility of the application setup.
+
+1.  Reduced complexity: Docker Compose abstracts away the complexity of managing multiple containers, networks, and volumes, providing a higher-level abstraction for defining and running multi-container applications.
+
+1.  Improved development workflow: Docker Compose enables developers to easily set up and tear down development environments, making it faster to iterate and test changes.
+
+1.  Portability: The `docker-compose.yaml` file can be used across different environments (development, staging, production) and on different machines, ensuring consistency and portability of the application setup.
+
+> By leveraging Docker Compose, you can streamline the process of defining, running, and managing multi-container Docker applications, making it easier to develop, test, and deploy complex applications.
